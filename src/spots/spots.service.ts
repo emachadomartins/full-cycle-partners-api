@@ -2,14 +2,25 @@ import { Injectable } from '@nestjs/common';
 import { CreateSpotDto } from './dto/create-spot.dto';
 import { UpdateSpotDto } from './dto/update-spot.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { SpotStatus } from '@prisma/client';
 
 @Injectable()
 export class SpotsService {
   constructor(private prismaService: PrismaService) {}
 
   async create(eventId: string, data: CreateSpotDto) {
+    const event = await this.prismaService.event.findUnique({
+      where: { id: eventId },
+    });
+
+    if (!event) throw new Error('Invalid event!');
+
     return this.prismaService.spot.create({
-      data: { ...data, eventId },
+      data: {
+        name: data.name,
+        eventId: event.id,
+        status: SpotStatus.available,
+      },
     });
   }
 
