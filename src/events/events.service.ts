@@ -7,8 +7,8 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class EventsService {
   constructor(private prismaService: PrismaService) {}
 
-  async create(createEventDto: CreateEventDto) {
-    return this.prismaService.event.create({ data: createEventDto });
+  async create(data: CreateEventDto) {
+    return this.prismaService.event.create({ data });
   }
 
   async findAll() {
@@ -19,9 +19,9 @@ export class EventsService {
     return this.prismaService.event.findUnique({ where: { id } });
   }
 
-  update(id: string, updateEventDto: UpdateEventDto) {
+  update(id: string, data: UpdateEventDto) {
     return this.prismaService.event.update({
-      data: updateEventDto,
+      data,
       where: { id },
     });
   }
